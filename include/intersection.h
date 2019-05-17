@@ -94,11 +94,9 @@ size_t onesidedgallopingintersection(const T *smallset,
     } else {
       CONST_IF(emit_output) *out++ = smallset[k2];
       else                   ++n;
-      ++k2;
-      if (k2 == smalllength)
+      if (++k2 == smalllength)
         break;
-      k1 = __frogadvanceUntil(largeset, k1, largelength, smallset[k2]);
-      if (k1 == largelength)
+      if((k1 = __frogadvanceUntil(largeset, k1, largelength, smallset[k2])) == largelength)
         break;
       goto midpoint;
     }
