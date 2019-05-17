@@ -1119,7 +1119,7 @@ inline std::map<std::string, intersectionfunction>
 initializeintersectionfactory() {
   std::map<std::string, intersectionfunction> schemes;
   schemes["simd"] = SIMDintersection;
-  schemes["galloping"] = onesidedgallopingintersection;
+  schemes["galloping"] = onesidedgallopingintersection<uint32_t>;
   schemes["scalar"] = scalar;
   schemes["v1"] = v1;
   schemes["v3"] = v3;

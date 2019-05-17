@@ -1,5 +1,4 @@
 
-
 #ifndef SIMDCompressionAndIntersection_INTERSECTION_H_
 #define SIMDCompressionAndIntersection_INTERSECTION_H_
 
@@ -65,11 +64,11 @@ size_t __frogadvanceUntil(const T *array, const size_t pos,
   return upper;
 }
 
-template<typename T>
+template<typename T, bool emit_output=true>
 size_t onesidedgallopingintersection(const T *smallset,
                                      const size_t smalllength,
                                      const T *largeset,
-                                     const size_t largelength, T *out) {
+                                     const size_t largelength, T *out=nullptr) {
   if (largelength < smalllength)
     return onesidedgallopingintersection(largeset, largelength, smallset,
                                          smalllength, out);
@@ -77,6 +76,10 @@ size_t onesidedgallopingintersection(const T *smallset,
     return 0;
   const T *const initout(out);
   size_t k1 = 0, k2 = 0;
+  size_t n = 0;
+  CONST_IF(emit_output) {
+     assert(out);
+  }
   while (true) {
     if (largeset[k1] < smallset[k2]) {
       k1 = __frogadvanceUntil(largeset, k1, largelength, smallset[k2]);
@@ -89,7 +92,8 @@ size_t onesidedgallopingintersection(const T *smallset,
       if (k2 == smalllength)
         break;
     } else {
-      *out++ = smallset[k2];
+      CONST_IF(emit_output) *out++ = smallset[k2];
+      else                   ++n;
       ++k2;
       if (k2 == smalllength)
         break;
@@ -99,7 +103,10 @@ size_t onesidedgallopingintersection(const T *smallset,
       goto midpoint;
     }
   }
-  return out - initout;
+  CONST_IF(emit_output)
+    return out - initout;
+  else
+    return n;
 }
 
 /**
